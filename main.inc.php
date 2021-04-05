@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Batch Downloader
-Version: 2.2.4
+Version: 2.2.10
 Description: Allows users to download pictures sets in ZIP. Compatible with User Collections.
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=616
 Author: Mistic
@@ -67,6 +67,13 @@ function batch_download_init()
 {
   global $conf;
 
+  if (is_string($conf['batch_download']))
+  {
+    // Piwigo 11 has added an automatic espace of the word "groups" (new MySQL reserved keyword).
+    // Unserialize doesn't like the escaped `groups` at all, so we need to remove it
+    $conf['batch_download'] = str_replace('`groups`', 'groups', $conf['batch_download']);
+  }
+
   $conf['batch_download'] = safe_unserialize($conf['batch_download']);
   $conf['batch_download']['file_pattern'] = isset($conf['batch_download_file_pattern']) ? $conf['batch_download_file_pattern'] : '%id%_%filename%_%dimensions%';
   $conf['batch_download']['allowed_ext'] = $conf['picture_ext'];
@@ -74,6 +81,10 @@ function batch_download_init()
   {
     $conf['batch_download']['allowed_ext'] = array_merge($conf['batch_download']['allowed_ext'], $conf['batch_download_additional_ext']);
   }
+  $conf['batch_download']['use_representative_for_ext'] = isset($conf['batch_download_use_representative_for_ext'])
+    ? $conf['batch_download_use_representative_for_ext']
+    : array('tif', 'TIF', 'tiff', 'TIFF')
+    ;
 
   load_language('plugin.lang', BATCH_DOWNLOAD_PATH);
 }
