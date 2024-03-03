@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Batch Downloader
-Version: 12.a
+Version: 14.a
 Description: Allows users to download pictures sets in ZIP. Compatible with User Collections.
 Plugin URI: http://piwigo.org/ext/extension_view.php?eid=616
 Author: Mistic
